@@ -14,7 +14,7 @@ int reset_button = 17;
 int nivel = 1; //Nível inicial
 int velocidade = 500; //Velocidade das piscadas
 
-const int limite = 50; //Limite do nível
+const int limite = 50; //Nível máximo
 int minha_lista[limite]; //Sequência de botões apertados do usuário
 int lista_correta[limite]; //Sequência correta dos botões
 
@@ -45,10 +45,7 @@ void loop() {//Configura o botão de reset
 }
 
 void mostrar_sequencia() { //Exibe a sequência da piscagem dos LEDs
-  digitalWrite(r_pin, LOW);
-  digitalWrite(g_pin, LOW);
-  digitalWrite(b_pin, LOW);
-  digitalWrite(y_pin, LOW);
+  apagar_todos();
   for(int i = 0; i < nivel; i++) {
     digitalWrite(lista_correta[i], HIGH);
     delay(velocidade);
@@ -136,43 +133,16 @@ void receber_sequencia() {//Recebe a sequência de input do usuário por meio do
 }
 
 void game_over() {//Acende os LEDs, indicando game over
-  digitalWrite(r_pin, HIGH);
-  digitalWrite(b_pin, HIGH);
-  digitalWrite(y_pin, HIGH);
-  digitalWrite(g_pin, HIGH);
+  acender_todos();
 }
 
 void ganhou() {//pisca o LED após ganhar
-  digitalWrite(r_pin, HIGH);
-  digitalWrite(b_pin, HIGH);
-  digitalWrite(y_pin, HIGH);
-  digitalWrite(g_pin, HIGH);
-  delay(400);
-  digitalWrite(r_pin, LOW);
-  digitalWrite(b_pin, LOW);
-  digitalWrite(y_pin, LOW);
-  digitalWrite(g_pin, LOW);
-  delay(400);
-  digitalWrite(r_pin, HIGH);
-  digitalWrite(b_pin, HIGH);
-  digitalWrite(y_pin, HIGH);
-  digitalWrite(g_pin, HIGH);
-  delay(400);
-  digitalWrite(r_pin, LOW);
-  digitalWrite(b_pin, LOW);
-  digitalWrite(y_pin, LOW);
-  digitalWrite(g_pin, LOW);
-  delay(400);
-  digitalWrite(r_pin, HIGH);
-  digitalWrite(b_pin, HIGH);
-  digitalWrite(y_pin, HIGH);
-  digitalWrite(g_pin, HIGH);
-  delay(400);
-  digitalWrite(r_pin, LOW);
-  digitalWrite(b_pin, LOW);
-  digitalWrite(y_pin, LOW);
-  digitalWrite(g_pin, LOW);
-  delay(400);
+  for (int i = 0; i < 3; i++) {
+    acender_todos();
+    delay(400);
+    apagar_todos();
+    delay(400);
+  }
   nivel ++; //Aumenta o nível
   velocidade -= 25; //Aumenta a velocidade das piscadas
   if (velocidade < 200) {//Estabelece um limite mínimo de velocidade
@@ -182,8 +152,23 @@ void ganhou() {//pisca o LED após ganhar
 }
 
 void resetar() {//Reinicia a rodada
+  apagar_todos();
+  delay(800);
   criar_sequencia();
   mostrar_sequencia();
   receber_sequencia();
-  delay(500);
+}
+
+void acender_todos() {
+  digitalWrite(r_pin, HIGH);
+  digitalWrite(b_pin, HIGH);
+  digitalWrite(y_pin, HIGH);
+  digitalWrite(g_pin, HIGH);
+}
+
+void apagar_todos() {
+  digitalWrite(r_pin, LOW);
+  digitalWrite(b_pin, LOW);
+  digitalWrite(y_pin, LOW);
+  digitalWrite(g_pin, LOW);
 }
